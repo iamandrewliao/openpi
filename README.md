@@ -32,7 +32,7 @@ The repo has been tested with Ubuntu 22.04, we do not currently support other op
 When cloning this repo, make sure to update submodules:
 
 ```bash
-git clone --recurse-submodules git@github.com:Physical-Intelligence/openpi.git
+git clone --recurse-submodules git@github.com:iamandrewliao/openpi.git
 
 # Or if you already cloned the repo:
 git submodule update --init --recursive
@@ -129,6 +129,11 @@ We provide a minimal example script for converting Libero data to a LeRobot data
 uv run examples/libero/convert_libero_data_to_lerobot.py --data_dir /path/to/your/libero/data
 ```
 
+For instance, if your data is in a folder in tensorflow_datasets directory e.g. tensorflow_datasets/pick_green_into_bowl/1.0.0:
+```bash
+uv run --with tensorflow_datasets examples/libero/convert_libero_data_to_lerobot.py --data_dir .../tensorflow_datasets/
+```
+Use ```--with name_of_package``` in the ```uv run``` command if you encounter a "ModuleNotFoundError"
 ### 2. Defining training configs and running training
 
 To fine-tune a base model on your own data, you need to define configs for data processing and training. We provide example configs with detailed comments for Libero below, which you can modify for your own dataset:
