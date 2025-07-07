@@ -134,7 +134,8 @@ For instance, if your data is in a folder in tensorflow_datasets directory e.g. 
 ```bash
 uv run examples/libero/convert_libero_data_to_lerobot.py --data_dir .../tensorflow_datasets/
 ```
-If you're wondering why not .../tensorflow_datasets/pick_green_into_bowl, RAW_DATASET_NAMES (line 31) is used in line 73 to specify the dataset name.
+The converted LeRobot dataset will be in '~/.cache/huggingface/lerobot' (HF_LEROBOT_HOME).  
+If you're wondering why not .../tensorflow_datasets/pick_green_into_bowl in the uv run command, RAW_DATASET_NAMES (line 31) is used in line 73 to specify the dataset name.
 
 ### 2. Defining training configs and running training
 
