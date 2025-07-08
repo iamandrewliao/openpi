@@ -90,13 +90,13 @@ class LiberoInputs(transforms.DataTransformFn):
             # We are padding to the model action dim.
             # For pi0-FAST, this is a no-op (since action_dim = 7).
             actions = transforms.pad_to_dim(data["action"], self.action_dim)
-            inputs["action"] = actions
+            inputs["actions"] = actions
 
         # Pass the prompt (aka language instruction) to the model.
         # Keep this for your own dataset (but modify the key if the instruction is not
         # stored in "prompt"; the output dict always needs to have the key "prompt").
-        if "language_instruction" in data:
-            inputs["prompt"] = data["language_instruction"]
+        if "prompt" in data:
+            inputs["prompt"] = data["prompt"]
 
         return inputs
 
@@ -115,4 +115,4 @@ class LiberoOutputs(transforms.DataTransformFn):
         # dimension, we need to now parse out the correct number of actions in the return dict.
         # For Libero, we only return the first 7 actions (since the rest is padding).
         # For your own dataset, replace `7` with the action dimension of your dataset.
-        return {"actions": np.asarray(data["action"][:, :7])}
+        return {"actions": np.asarray(data["actions"][:, :7])}

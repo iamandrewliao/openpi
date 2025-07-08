@@ -351,7 +351,7 @@ class LeRobotPickGreenIntoBowlDataConfig(DataConfigFactory):
                         "observation/image": "image",
                         # "observation/wrist_image": "wrist_image",
                         "observation/state": "state",
-                        "action": "actions",
+                        "action": "action",
                         "language_instruction": "prompt",
                     }
                 )
