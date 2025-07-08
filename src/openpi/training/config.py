@@ -397,6 +397,7 @@ class LeRobotPickGreenIntoBowlDataConfig(DataConfigFactory):
             repack_transforms=repack_transform,
             data_transforms=data_transforms,
             model_transforms=model_transforms,
+            action_sequence_keys=("action",),
         )
 
 
