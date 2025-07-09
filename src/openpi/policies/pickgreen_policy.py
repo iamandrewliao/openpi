@@ -53,6 +53,7 @@ class LiberoInputs(transforms.DataTransformFn):
         # Keep this for your own dataset, but if your dataset stores the proprioceptive input
         # in a different key than "observation/state", you should change it below.
         state = transforms.pad_to_dim(data["observation/state"], self.action_dim)
+        # print(state.shape, state.dtype)
 
         # Possibly need to parse images to uint8 (H,W,C) since LeRobot automatically
         # stores as float32 (C,H,W), gets skipped for policy inference.
@@ -64,6 +65,7 @@ class LiberoInputs(transforms.DataTransformFn):
         # of image, e.g. wrist images, you can comment it out here and replace it with zeros like we do for the
         # right wrist image below.
         base_image = _parse_image(data["observation/image"])
+        # print(base_image.shape, base_image.dtype)
         # wrist_image = _parse_image(data["observation/wrist_image"])
 
         # Create inputs dict. Do not change the keys in the dict below.
@@ -95,8 +97,10 @@ class LiberoInputs(transforms.DataTransformFn):
         # Pass the prompt (aka language instruction) to the model.
         # Keep this for your own dataset (but modify the key if the instruction is not
         # stored in "prompt"; the output dict always needs to have the key "prompt").
-        if "prompt" in data:
-            inputs["prompt"] = data["prompt"]
+        if "task" in data:
+            inputs["prompt"] = data["task"]
+        else:
+            print("No prompt found")
 
         return inputs
 

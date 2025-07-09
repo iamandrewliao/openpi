@@ -344,15 +344,16 @@ class LeRobotPickGreenIntoBowlDataConfig(DataConfigFactory):
         # For your own dataset, first figure out what keys your environment passes to the policy server
         # and then modify the mappings below so your dataset's keys get matched to those target keys.
         # The repack transform simply remaps key names here.
+        # TLDR: In RepackTransform below, key is new key used by data[key] in pickgreen_policy.py, value is the old key from the dataset
         repack_transform = _transforms.Group(
             inputs=[
                 _transforms.RepackTransform(
                     {
-                        "observation/image": "image",
+                        "observation/image": "image",  
                         # "observation/wrist_image": "wrist_image",
                         "observation/state": "state",
                         "action": "action",
-                        "language_instruction": "prompt",
+                        "task": "prompt",  # Note: I believe if prompt_from_task=True below, you will be able to use "prompt" or "task" as the value
                     }
                 )
             ]
@@ -500,7 +501,7 @@ class TrainConfig:
     # How often (in steps) to log training metrics.
     log_interval: int = 100
     # How often (in steps) to save checkpoints.
-    save_interval: int = 1000
+    save_interval: int = 500
     # If set, any existing checkpoints matching step % keep_period == 0 will not be deleted.
     keep_period: int | None = 5000
 
@@ -620,6 +621,7 @@ _CONFIGS = [
         ),
         weight_loader=weight_loaders.CheckpointWeightLoader("gs://openpi-assets/checkpoints/pi0_base/params"),
         num_train_steps=30_000,
+        batch_size=16,  # in case of out of memory
         # The freeze filter defines which parameters should be frozen during training.
         # We have a convenience function in the model config that returns the default freeze filter
         # for the given model config for LoRA finetuning. Just make sure it matches the model config
@@ -643,6 +645,7 @@ _CONFIGS = [
         ),
         weight_loader=weight_loaders.CheckpointWeightLoader("gs://openpi-assets/checkpoints/pi0_fast_base/params"),
         num_train_steps=30_000,
+        batch_size=16,
         # Again, make sure to match the model config above when extracting the freeze filter
         # that specifies which parameters should be frozen during LoRA finetuning.
         freeze_filter=pi0_fast.Pi0FASTConfig(
@@ -823,7 +826,7 @@ _CONFIGS = [
     TrainConfig(
         name="debug",
         data=FakeDataConfig(),
-        batch_size=2,
+        batch_size=8,
         model=pi0.Pi0Config(paligemma_variant="dummy", action_expert_variant="dummy"),
         save_interval=100,
         overwrite=True,
