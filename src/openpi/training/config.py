@@ -344,7 +344,7 @@ class LeRobotPickGreenIntoBowlDataConfig(DataConfigFactory):
         # For your own dataset, first figure out what keys your environment passes to the policy server
         # and then modify the mappings below so your dataset's keys get matched to those target keys.
         # The repack transform simply remaps key names here.
-        # TLDR: In RepackTransform below, key is new key used by data[key] in pickgreen_policy.py, value is the old key from the dataset
+        # TLDR: In RepackTransform() below, the key is the new key used by data[key] in pickgreen_policy.py and the value is the old key from the dataset
         repack_transform = _transforms.Group(
             inputs=[
                 _transforms.RepackTransform(
@@ -618,6 +618,8 @@ _CONFIGS = [
         data=LeRobotPickGreenIntoBowlDataConfig(
             repo_id="iamandrewliao/vla_datasets",
             base_config=DataConfig(prompt_from_task=True),
+            # change AssetsConfig to your model & embodiment if your embodiment is part of the pre-training data (see norm_stats.md); otherwise, delete this line
+            # assets=AssetsConfig(assets_dir="gs://openpi-assets/checkpoints/pi0_base/assets", asset_id="ur5e")
         ),
         weight_loader=weight_loaders.CheckpointWeightLoader("gs://openpi-assets/checkpoints/pi0_base/params"),
         num_train_steps=30_000,
@@ -643,6 +645,8 @@ _CONFIGS = [
         data=LeRobotPickGreenIntoBowlDataConfig(
             repo_id="iamandrewliao/vla_datasets",
             base_config=DataConfig(prompt_from_task=True),
+            # change AssetsConfig to your model & embodiment if your embodiment is part of the pre-training data (see norm_stats.md); otherwise, delete this line
+            assets=AssetsConfig(assets_dir="gs://openpi-assets/checkpoints/pi0_fast_base/assets", asset_id="ur5e")
         ),
         weight_loader=weight_loaders.CheckpointWeightLoader("gs://openpi-assets/checkpoints/pi0_fast_base/params"),
         num_train_steps=30_000,

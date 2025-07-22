@@ -145,15 +145,16 @@ To fine-tune a base model on your own data, you need to define configs for data 
 - [`LeRobotLiberoDataConfig`](src/openpi/training/config.py): Defines how to process raw Libero data from LeRobot dataset for training.
 - [`TrainConfig`](src/openpi/training/config.py): Defines fine-tuning hyperparameters, data config, and weight loader.
 
-We provide example fine-tuning configs for both, [π₀](src/openpi/training/config.py) and [π₀-FAST](src/openpi/training/config.py) on Libero data.
+We provide example fine-tuning configs for both, [π₀](src/openpi/training/config.py) and [π₀-FAST](src/openpi/training/config.py) on Libero data. Also see the [examples](#more-examples) below.
 
-Be careful on this step! Make sure you understand RepackTransform. Look out for other things to change not listed above. For guidance, you can look at the difference between this repo and the original openpi repo. I've also included a inspect_lerobot_data.py for inspecting LeRobot datasets.
+Be careful on this step! e.g. Make sure you understand RepackTransform. Look out for other things to change not listed above. For guidance, you can look at the difference between this repo and the original openpi repo. I've also included a inspect_lerobot_data.py file for inspecting LeRobot datasets.
 
 Before we can run training, we need to compute the normalization statistics for the training data. Run the script below with the name of your training config:
 
 ```bash
 uv run scripts/compute_norm_stats.py --config-name pi0_fast_libero
 ```
+**Note:** We provide functionality for *reloading* normalization statistics for state / action normalization from pre-training. This can be beneficial if you are fine-tuning to a new task on a robot that was part of our pre-training mixture. For more details on how to reload normalization statistics, see the [norm_stats.md](docs/norm_stats.md) file.  
 
 Now we can kick off training with the following command (the `--overwrite` flag is used to overwrite existing checkpoints if you rerun fine-tuning with the same config but `--resume` should be used instead for resuming a run):
 
@@ -165,8 +166,6 @@ Notes:
 - fsdp_devices in config.py should be tweaked for multi-GPU training
 
 The command will log training progress to the console and save checkpoints to the `checkpoints` directory. You can also monitor training progress on the Weights & Biases dashboard. For maximally using the GPU memory, set `XLA_PYTHON_CLIENT_MEM_FRACTION=0.9` before running training -- this enables JAX to use up to 90% of the GPU memory (vs. the default of 75%).
-
-**Note:** We provide functionality for *reloading* normalization statistics for state / action normalization from pre-training. This can be beneficial if you are fine-tuning to a new task on a robot that was part of our pre-training mixture. For more details on how to reload normalization statistics, see the [norm_stats.md](docs/norm_stats.md) file.
 
 ### 3. Spinning up a policy server and running inference
 
