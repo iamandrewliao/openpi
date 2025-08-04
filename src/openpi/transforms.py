@@ -67,9 +67,11 @@ class CompositeTransform(DataTransformFn):
 
     def __call__(self, data: DataDict) -> DataDict:
         for transform in self.transforms:
-            print(f"Before {transform.__class__.__name__}: {list(data.keys())}")
+            # print(f"Before {transform.__class__.__name__}: {list(data.keys())}")
+            # print(data)
             data = transform(data)
-            print(f"After {transform.__class__.__name__}: {list(data.keys())}")
+            # print(f"After {transform.__class__.__name__}: {list(data.keys())}")
+            # print(data)
         return data
 
 
@@ -100,7 +102,7 @@ class RepackTransform(DataTransformFn):
 
     def __call__(self, data: DataDict) -> DataDict:
         flat_item = flatten_dict(data)
-        print("RepackTransform flattened keys:", list(flat_item.keys()))
+        # print("RepackTransform flattened keys:", list(flat_item.keys()))
         return jax.tree.map(lambda k: flat_item[k], self.structure)
 
 

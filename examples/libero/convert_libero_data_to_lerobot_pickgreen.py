@@ -14,8 +14,8 @@ Note: to run the script, you need to install tensorflow_datasets:
 `uv pip install tensorflow tensorflow_datasets`
 
 You can download the raw Libero datasets from https://huggingface.co/datasets/openvla/modified_libero_rlds
+The resulting dataset will get saved to the $LEROBOT_HOME directory.
 Running this conversion script will take approximately 30 minutes.
-The resulting dataset will get saved to the $HF_LEROBOT_HOME directory which is typically ~/.cache/huggingface/lerobot
 """
 
 import shutil
@@ -30,7 +30,7 @@ import numpy as np
 REPO_NAME = "iamandrewliao/vla_datasets"  # Name of the output dataset, also used for the Hugging Face Hub
 RAW_DATASET_NAMES = [
     "pick_green_into_bowl",
-]  # For simplicity we will combine multiple Libero datasets into one training dataset
+]
 
 
 def main(data_dir: str, *, push_to_hub: bool = False):
@@ -85,6 +85,9 @@ def main(data_dir: str, *, push_to_hub: bool = False):
                     }
                 )
             dataset.save_episode()
+
+    # Consolidate the dataset, skip computing stats since we will do that later
+    # dataset.consolidate(run_compute_stats=False)
 
     # Optionally push to the Hugging Face Hub
     if push_to_hub:

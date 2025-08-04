@@ -121,20 +121,24 @@ We will fine-tune the $\pi_0$-FAST model on the [Libero dataset](https://libero-
 2. Defining training configs and running training
 3. Spinning up a policy server and running inference
 
-### 1. Convert your data to a LeRobot dataset
+### 1. Convert your RLDS data to a LeRobot dataset
 
-We provide a minimal example script for converting Libero data to a LeRobot dataset in [`examples/libero/convert_libero_data_to_lerobot.py`](examples/libero/convert_libero_data_to_lerobot.py). You can easily modify it to convert your own data! You can download the raw Libero dataset from [here](https://huggingface.co/datasets/openvla/modified_libero_rlds), and run the script with:
-
+We provide a minimal example script for converting Libero (or any RLDS format) data to a LeRobot dataset in [`examples/libero/convert_libero_data_to_lerobot.py`](examples/libero/convert_libero_data_to_lerobot.py). You can easily modify it to convert your own data!  
+You can download the raw Libero dataset from [here](https://huggingface.co/datasets/openvla/modified_libero_rlds) by running:
+```bash
+huggingface-cli download openvla/modified_libero_rlds --repo-type dataset --local-dir /path/to/your/desired/dataset/directory
+```
+Then you can move on to running the conversion script 'examples/libero/convert_libero_data_to_lerobot.py'. Don't forget to change things like REPO_NAME, RAW_DATASET_NAMES, etc.
+Then you can run the conversion script with:
 ```bash
 uv pip install tensorflow tensorflow_datasets
 uv run examples/libero/convert_libero_data_to_lerobot.py --data_dir /path/to/your/libero/data
 ```
-
 For instance, if your data is in a folder in tensorflow_datasets directory e.g. tensorflow_datasets/pick_green_into_bowl/1.0.0:
 ```bash
 uv run examples/libero/convert_libero_data_to_lerobot.py --data_dir .../tensorflow_datasets/
 ```
-The converted LeRobot dataset will be in '~/.cache/huggingface/lerobot' (HF_LEROBOT_HOME).  
+The converted LeRobot dataset will be in '~/.cache/huggingface/lerobot' ($HF_LEROBOT_HOME).  
 If you're wondering why not .../tensorflow_datasets/pick_green_into_bowl in the uv run command, RAW_DATASET_NAMES (line 31) is used in line 73 to specify the dataset name.
 
 ### 2. Defining training configs and running training
@@ -147,7 +151,10 @@ To fine-tune a base model on your own data, you need to define configs for data 
 
 We provide example fine-tuning configs for both, [π₀](src/openpi/training/config.py) and [π₀-FAST](src/openpi/training/config.py) on Libero data. Also see the [examples](#more-examples) below.
 
-Be careful on this step! e.g. Make sure you understand RepackTransform. Look out for other things to change not listed above. For guidance, you can look at the difference between this repo and the original openpi repo. I've also included a inspect_lerobot_data.py file for inspecting LeRobot datasets.
+Note: Be careful on this step!
+- Make sure you understand RepackTransform. 
+- 'repo_id' in the TrainConfig() instances in config.py should be the path to your dataset (whether or not you chose to --push_to_hub) i.e. probably '~/.cache/huggingface/lerobot/REPO_NAME' (REPO_NAME is from convert_libero_data_to_lerobot.py).
+- Look out for other things to change not listed above. For guidance, you can look at the difference between this repo and the original openpi repo. I've also included a inspect_lerobot_data.py file for inspecting LeRobot datasets.
 
 Before we can run training, we need to compute the normalization statistics for the training data. Run the script below with the name of your training config:
 
@@ -169,13 +176,10 @@ The command will log training progress to the console and save checkpoints to th
 
 ### 3. Spinning up a policy server and running inference
 
-Once training is complete, we can run inference by spinning up a policy server and then querying it from a Libero evaluation script. Launching a model server is easy (we use the checkpoint for iteration 20,000 for this example, modify as needed):
-
-```bash
-uv run scripts/serve_policy.py policy:checkpoint --policy.config=pi0_fast_libero --policy.dir=checkpoints/pi0_fast_libero/my_experiment/20000
-```
-
-This will spin up a server that listens on port 8000 and waits for observations to be sent to it. We can then run the Libero evaluation script to query the server. For instructions how to install Libero and run the evaluation script, see the [Libero README](examples/libero/README.md).
+Once training is complete, we can run inference by spinning up a policy server and then querying it from a Libero evaluation script. Follow the instructions here to install Libero and run the evaluation script: [Libero README](examples/libero/README.md).  
+This will:
+1. spin up a server that listens on port 8000 and waits for observations to be sent to it.
+2. We can then run the Libero evaluation script to query the server.
 
 If you want to embed a policy server call in your own robot runtime, we have a minimal example of how to do so in the [remote inference docs](docs/remote_inference.md).
 

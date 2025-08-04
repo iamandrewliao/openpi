@@ -37,14 +37,11 @@ class Policy(BasePolicy):
         self._rng = rng or jax.random.key(0)
         self._sample_kwargs = sample_kwargs or {}
         self._metadata = metadata or {}
-        self._transforms = transforms
 
     @override
     def infer(self, obs: dict) -> dict:  # type: ignore[misc]
         # Make a copy since transformations may modify the inputs in place.
-        print("Transforms:", self._transforms)
         inputs = jax.tree.map(lambda x: x, obs)
-        print(f"Inputs keys: {list(inputs.keys())}")
         inputs = self._input_transform(inputs)
         # Make a batch and convert to jax.Array.
         inputs = jax.tree.map(lambda x: jnp.asarray(x)[np.newaxis, ...], inputs)

@@ -616,7 +616,7 @@ _CONFIGS = [
         # Here is an example of loading a pi0 model for LoRA fine-tuning.
         model=pi0.Pi0Config(paligemma_variant="gemma_2b_lora", action_expert_variant="gemma_300m_lora"),
         data=LeRobotPickGreenIntoBowlDataConfig(
-            repo_id="iamandrewliao/vla_datasets",
+            repo_id="iamandrewliao/vla_datasets",  # change this to the location of the converted dataset
             base_config=DataConfig(prompt_from_task=True),
             # change AssetsConfig to your model & embodiment if your embodiment is part of the pre-training data (see norm_stats.md); otherwise, delete this line
             # assets=AssetsConfig(assets_dir="gs://openpi-assets/checkpoints/pi0_base/assets", asset_id="ur5e")
@@ -643,7 +643,7 @@ _CONFIGS = [
             action_dim=7, action_horizon=10, max_token_len=180, paligemma_variant="gemma_2b_lora"
         ),
         data=LeRobotPickGreenIntoBowlDataConfig(
-            repo_id="iamandrewliao/vla_datasets",
+            repo_id="iamandrewliao/vla_datasets",  # change this to the location of the converted dataset
             base_config=DataConfig(prompt_from_task=True),
             # change AssetsConfig to your model & embodiment if your embodiment is part of the pre-training data (see norm_stats.md); otherwise, delete this line
             assets=AssetsConfig(assets_dir="gs://openpi-assets/checkpoints/pi0_fast_base/assets", asset_id="ur5e")
@@ -671,7 +671,7 @@ _CONFIGS = [
         # dataset. For your own dataset, you can change the repo_id to point to your dataset.
         # Also modify the DataConfig to use the new config you made for your dataset above.
         data=LeRobotLiberoDataConfig(
-            repo_id="physical-intelligence/libero",
+            repo_id="physical-intelligence/libero",  # change this to the location of the converted dataset
             base_config=DataConfig(
                 # This flag determines whether we load the prompt (i.e. the task instruction) from the
                 # ``task`` field in the LeRobot dataset. If set to True, the prompt will show up in
@@ -691,7 +691,7 @@ _CONFIGS = [
         # Here is an example of loading a pi0 model for LoRA fine-tuning.
         model=pi0.Pi0Config(paligemma_variant="gemma_2b_lora", action_expert_variant="gemma_300m_lora"),
         data=LeRobotLiberoDataConfig(
-            repo_id="physical-intelligence/libero",
+            repo_id="physical-intelligence/libero",  # change this to the location of the converted dataset
             base_config=DataConfig(prompt_from_task=True),
         ),
         weight_loader=weight_loaders.CheckpointWeightLoader("gs://openpi-assets/checkpoints/pi0_base/params"),
@@ -720,7 +720,7 @@ _CONFIGS = [
         # you see many warnings being thrown during training.
         model=pi0_fast.Pi0FASTConfig(action_dim=7, action_horizon=10, max_token_len=180),
         data=LeRobotLiberoDataConfig(
-            repo_id="physical-intelligence/libero",
+            repo_id="physical-intelligence/libero",  # change this to the location of the converted dataset
             base_config=DataConfig(prompt_from_task=True),
         ),
         # Note that we load the pi0-FAST base model checkpoint here.
@@ -735,7 +735,7 @@ _CONFIGS = [
             action_dim=7, action_horizon=10, max_token_len=180, paligemma_variant="gemma_2b_lora"
         ),
         data=LeRobotLiberoDataConfig(
-            repo_id="physical-intelligence/libero",
+            repo_id="physical-intelligence/libero",  # change this to the location of the converted dataset
             base_config=DataConfig(prompt_from_task=True),
         ),
         weight_loader=weight_loaders.CheckpointWeightLoader("gs://openpi-assets/checkpoints/pi0_fast_base/params"),
@@ -751,7 +751,7 @@ _CONFIGS = [
     #
     # Fine-tuning Aloha configs.
     #
-    # This is a test config that is used to illustate how train on a custom LeRobot dataset.
+    # This is a test config that is used to illustrate how train on a custom LeRobot dataset.
     # For instuctions on how to convert and train on your own Aloha dataset see examples/aloha_real/README.md
     TrainConfig(
         name="pi0_aloha_pen_uncap",
