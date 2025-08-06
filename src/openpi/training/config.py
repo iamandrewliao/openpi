@@ -743,7 +743,7 @@ _CONFIGS = [
             action_dim=7, action_horizon=10, max_token_len=180, paligemma_variant="gemma_2b_lora"
         ),
         data=LeRobotLiberoDataConfig(
-            repo_id="physical-intelligence/libero",  # change this to the location of the converted dataset
+            repo_id="your_hf_username/libero",  # change this to the location of the converted dataset
             base_config=DataConfig(prompt_from_task=True),
         ),
         weight_loader=weight_loaders.CheckpointWeightLoader("gs://openpi-assets/checkpoints/pi0_fast_base/params"),

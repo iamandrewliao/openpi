@@ -160,7 +160,7 @@ def eval_libero(args: Args) -> None:
                 except Exception as e:
                     logging.error(f"Caught exception: {e}")
                     break
-
+            print(f"Episode finished after {t} steps.")
             task_episodes += 1
             total_episodes += 1
 
